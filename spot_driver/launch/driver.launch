@@ -2,8 +2,12 @@
   <arg name="username" default="dummyusername" />
   <arg name="password" default="dummypassword" />
   <arg name="hostname" default="192.168.50.3" />
+  <arg name="static_camera_frames" default="false" />
 
-  <include file="$(find spot_description)/launch/description.launch" />
+  <include file="$(find spot_description)/launch/description.launch">
+    <arg name="static_camera_frames" value="$(arg static_camera_frames)"/>
+  </include>
+  
   <include file="$(find spot_driver)/launch/control.launch" />
 
   <node pkg="spot_driver" type="spot_ros.py" name="spot_ros"  ns="spot" output="screen">
@@ -11,6 +15,7 @@
     <param name="username" value="$(arg username)" />
     <param name="password" value="$(arg password)" />
     <param name="hostname" value="$(arg hostname)" />
+    <param name="static_camera_frames" value="$(arg static_camera_frames)" />
     <remap from="joint_states" to="/joint_states"/>
     <remap from="tf" to="/tf"/>
   </node>

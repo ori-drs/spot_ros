@@ -1,5 +1,6 @@
 <launch>
-  <param name="robot_description" command="$(find xacro)/xacro $(find spot_description)/urdf/spot.urdf.xacro --inorder" />
+  <arg name="static_camera_frames" default="false"/>
+  <param name="robot_description" command="$(find xacro)/xacro $(find spot_description)/urdf/spot.urdf.xacro --inorder static_camera_frames:=$(arg static_camera_frames) " />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 </launch>
