@@ -90,8 +90,8 @@ def getImageMsg(data, spot_wrapper, inverse_target_frame):
             * CameraInfo: message to define the state and config of the camera that took the image
             * TFMessage: with the transforms necessary to locate the image frames
     """
+    tf_msg = TFMessage()
     if inverse_target_frame:
-        tf_msg = TFMessage()
         for frame_name in data.shot.transforms_snapshot.child_to_parent_edge_map:
             if data.shot.transforms_snapshot.child_to_parent_edge_map.get(frame_name).parent_frame_name:
                 try:
