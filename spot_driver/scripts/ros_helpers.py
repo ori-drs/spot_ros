@@ -82,47 +82,49 @@ def getImageMsg(data, spot_wrapper, inverse_target_frame):
     Args:
         data: Image proto
         spot_wrapper: A SpotWrapper object
-        inverse_target_frame: A frame name to be inversed to a parent frame.
+        inverse_target_frame: A frame name to be inversed to a parent frame. If frame provided is None,
+        tf transformation is skipped.
     Returns:
         (tuple):
             * Image: message of the image captured
             * CameraInfo: message to define the state and config of the camera that took the image
             * TFMessage: with the transforms necessary to locate the image frames
     """
-    tf_msg = TFMessage()
-    for frame_name in data.shot.transforms_snapshot.child_to_parent_edge_map:
-        if data.shot.transforms_snapshot.child_to_parent_edge_map.get(frame_name).parent_frame_name:
-            try:
-                transform = data.shot.transforms_snapshot.child_to_parent_edge_map.get(frame_name)
-                new_tf = TransformStamped()
-                local_time = spot_wrapper.robotToLocalTime(data.shot.acquisition_time)
-                new_tf.header.stamp = rospy.Time(local_time.seconds, local_time.nanos)
-                parent = transform.parent_frame_name
-                child = frame_name
-                if inverse_target_frame == frame_name:
-                    geo_tform_inversed = SE3Pose.from_obj(transform.parent_tform_child).inverse()
-                    new_tf.header.frame_id = frame_name
-                    new_tf.child_frame_id = transform.parent_frame_name
-                    new_tf.transform.translation.x = geo_tform_inversed.position.x
-                    new_tf.transform.translation.y = geo_tform_inversed.position.y
-                    new_tf.transform.translation.z = geo_tform_inversed.position.z
-                    new_tf.transform.rotation.x = geo_tform_inversed.rotation.x
-                    new_tf.transform.rotation.y = geo_tform_inversed.rotation.y
-                    new_tf.transform.rotation.z = geo_tform_inversed.rotation.z
-                    new_tf.transform.rotation.w = geo_tform_inversed.rotation.w
-                else:
-                    new_tf.header.frame_id = transform.parent_frame_name
-                    new_tf.child_frame_id = frame_name
-                    new_tf.transform.translation.x = transform.parent_tform_child.position.x
-                    new_tf.transform.translation.y = transform.parent_tform_child.position.y
-                    new_tf.transform.translation.z = transform.parent_tform_child.position.z
-                    new_tf.transform.rotation.x = transform.parent_tform_child.rotation.x
-                    new_tf.transform.rotation.y = transform.parent_tform_child.rotation.y
-                    new_tf.transform.rotation.z = transform.parent_tform_child.rotation.z
-                    new_tf.transform.rotation.w = transform.parent_tform_child.rotation.w
-                tf_msg.transforms.append(new_tf)
-            except Exception as e:
-                print('Error: {}'.format(e))
+    if inverse_target_frame:
+        tf_msg = TFMessage()
+        for frame_name in data.shot.transforms_snapshot.child_to_parent_edge_map:
+            if data.shot.transforms_snapshot.child_to_parent_edge_map.get(frame_name).parent_frame_name:
+                try:
+                    transform = data.shot.transforms_snapshot.child_to_parent_edge_map.get(frame_name)
+                    new_tf = TransformStamped()
+                    local_time = spot_wrapper.robotToLocalTime(data.shot.acquisition_time)
+                    new_tf.header.stamp = rospy.Time(local_time.seconds, local_time.nanos)
+                    parent = transform.parent_frame_name
+                    child = frame_name
+                    if inverse_target_frame == frame_name:
+                        geo_tform_inversed = SE3Pose.from_obj(transform.parent_tform_child).inverse()
+                        new_tf.header.frame_id = frame_name
+                        new_tf.child_frame_id = transform.parent_frame_name
+                        new_tf.transform.translation.x = geo_tform_inversed.position.x
+                        new_tf.transform.translation.y = geo_tform_inversed.position.y
+                        new_tf.transform.translation.z = geo_tform_inversed.position.z
+                        new_tf.transform.rotation.x = geo_tform_inversed.rotation.x
+                        new_tf.transform.rotation.y = geo_tform_inversed.rotation.y
+                        new_tf.transform.rotation.z = geo_tform_inversed.rotation.z
+                        new_tf.transform.rotation.w = geo_tform_inversed.rotation.w
+                    else:
+                        new_tf.header.frame_id = transform.parent_frame_name
+                        new_tf.child_frame_id = frame_name
+                        new_tf.transform.translation.x = transform.parent_tform_child.position.x
+                        new_tf.transform.translation.y = transform.parent_tform_child.position.y
+                        new_tf.transform.translation.z = transform.parent_tform_child.position.z
+                        new_tf.transform.rotation.x = transform.parent_tform_child.rotation.x
+                        new_tf.transform.rotation.y = transform.parent_tform_child.rotation.y
+                        new_tf.transform.rotation.z = transform.parent_tform_child.rotation.z
+                        new_tf.transform.rotation.w = transform.parent_tform_child.rotation.w
+                    tf_msg.transforms.append(new_tf)
+                except Exception as e:
+                    print('Error: {}'.format(e))
 
     image_msg = Image()
     local_time = spot_wrapper.robotToLocalTime(data.shot.acquisition_time)

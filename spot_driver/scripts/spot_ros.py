@@ -158,22 +158,27 @@ class SpotROS():
         """
         data = self.spot_wrapper.front_images
         if data:
-            image_msg0, camera_info_msg0, camera_tf_msg0 = getImageMsg(data[0], self.spot_wrapper, self.mode_parent_odom_tf)
+            frame = None if self.static_camera_frames else self.mode_parent_odom_tf
+            image_msg0, camera_info_msg0, camera_tf_msg0 = getImageMsg(data[0], self.spot_wrapper, frame)
             self.frontleft_image_pub.publish(image_msg0)
             self.frontleft_image_info_pub.publish(camera_info_msg0)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg0)
-            image_msg1, camera_info_msg1, camera_tf_msg1 = getImageMsg(data[1], self.spot_wrapper, self.mode_parent_odom_tf)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg0)
+            image_msg1, camera_info_msg1, camera_tf_msg1 = getImageMsg(data[1], self.spot_wrapper, frame)
             self.frontright_image_pub.publish(image_msg1)
             self.frontright_image_info_pub.publish(camera_info_msg1)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg1)
-            image_msg2, camera_info_msg2, camera_tf_msg2 = getImageMsg(data[2], self.spot_wrapper, self.mode_parent_odom_tf)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg1)
+            image_msg2, camera_info_msg2, camera_tf_msg2 = getImageMsg(data[2], self.spot_wrapper, frame)
             self.frontleft_depth_pub.publish(image_msg2)
             self.frontleft_depth_info_pub.publish(camera_info_msg2)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg2)
-            image_msg3, camera_info_msg3, camera_tf_msg3 = getImageMsg(data[3], self.spot_wrapper, self.mode_parent_odom_tf)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg2)
+            image_msg3, camera_info_msg3, camera_tf_msg3 = getImageMsg(data[3], self.spot_wrapper, frame)
             self.frontright_depth_pub.publish(image_msg3)
             self.frontright_depth_info_pub.publish(camera_info_msg3)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg3)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg3)
 
     def SideImageCB(self, results):
         """Callback for when the Spot Wrapper gets new side image data.
@@ -183,22 +188,27 @@ class SpotROS():
         """
         data = self.spot_wrapper.side_images
         if data:
-            image_msg0, camera_info_msg0, camera_tf_msg0 = getImageMsg(data[0], self.spot_wrapper, self.mode_parent_odom_tf)
+            frame = None if self.static_camera_frames else self.mode_parent_odom_tf
+            image_msg0, camera_info_msg0, camera_tf_msg0 = getImageMsg(data[0], self.spot_wrapper, frame)
             self.left_image_pub.publish(image_msg0)
             self.left_image_info_pub.publish(camera_info_msg0)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg0)
-            image_msg1, camera_info_msg1, camera_tf_msg1 = getImageMsg(data[1], self.spot_wrapper, self.mode_parent_odom_tf)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg0)
+            image_msg1, camera_info_msg1, camera_tf_msg1 = getImageMsg(data[1], self.spot_wrapper, frame)
             self.right_image_pub.publish(image_msg1)
             self.right_image_info_pub.publish(camera_info_msg1)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg1)
-            image_msg2, camera_info_msg2, camera_tf_msg2 = getImageMsg(data[2], self.spot_wrapper, self.mode_parent_odom_tf)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg1)
+            image_msg2, camera_info_msg2, camera_tf_msg2 = getImageMsg(data[2], self.spot_wrapper, frame)
             self.left_depth_pub.publish(image_msg2)
             self.left_depth_info_pub.publish(camera_info_msg2)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg2)
-            image_msg3, camera_info_msg3, camera_tf_msg3 = getImageMsg(data[3], self.spot_wrapper, self.mode_parent_odom_tf)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg2)
+            image_msg3, camera_info_msg3, camera_tf_msg3 = getImageMsg(data[3], self.spot_wrapper, frame)
             self.right_depth_pub.publish(image_msg3)
             self.right_depth_info_pub.publish(camera_info_msg3)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg3)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg3)
 
     def RearImageCB(self, results):
         """Callback for when the Spot Wrapper gets new rear image data.
@@ -208,14 +218,17 @@ class SpotROS():
         """
         data = self.spot_wrapper.rear_images
         if data:
-            mage_msg0, camera_info_msg0, camera_tf_msg0 = getImageMsg(data[0], self.spot_wrapper, self.mode_parent_odom_tf)
+            frame = None if self.static_camera_frames else self.mode_parent_odom_tf
+            mage_msg0, camera_info_msg0, camera_tf_msg0 = getImageMsg(data[0], self.spot_wrapper, frame)
             self.back_image_pub.publish(mage_msg0)
             self.back_image_info_pub.publish(camera_info_msg0)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg0)
-            mage_msg1, camera_info_msg1, camera_tf_msg1 = getImageMsg(data[1], self.spot_wrapper, self.mode_parent_odom_tf)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg0)
+            mage_msg1, camera_info_msg1, camera_tf_msg1 = getImageMsg(data[1], self.spot_wrapper, frame)
             self.back_depth_pub.publish(mage_msg1)
             self.back_depth_info_pub.publish(camera_info_msg1)
-            if self.static_camera_frames: self.tf_pub.publish(camera_tf_msg1)
+            if not self.static_camera_frames:
+                self.tf_pub.publish(camera_tf_msg1)
 
     def handle_claim(self, req):
         """ROS service handler for the claim service"""
