@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot name="os" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="$(find rooster_description)/urdf/ouster.urdf.xacro"/>
+    <!-- add OS Ouster Lidar sensor -->
+    <xacro:os_device name="os1_sensor" parent="front_rail" simulation="false">
+      <origin xyz="0.07 0 0.03" rpy="0 0 0" />
+    </xacro:os_device>
+</robot>
