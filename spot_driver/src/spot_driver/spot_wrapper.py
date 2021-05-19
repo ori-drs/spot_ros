@@ -179,12 +179,12 @@ class AsyncIdle(AsyncPeriodicQuery):
         if self._spot_wrapper._last_trajectory_command != None:
             try:
                 response = self._client.robot_command_feedback(self._spot_wrapper._last_trajectory_command)
-                if (response.feedback.synchronized_feedback.mobility_command_feedback.se2_trajectory_feedback.status ==
+                if (response.feedback.mobility_feedback.se2_trajectory_feedback.status ==
                     basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_GOING_TO_GOAL):
                     is_moving = True
-                elif (response.feedback.synchronized_feedback.mobility_command_feedback.se2_trajectory_feedback.status ==
+                elif (response.feedback.mobility_feedback.se2_trajectory_feedback.status ==
                     basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_AT_GOAL) or \
-                     (response.feedback.synchronized_feedback.mobility_command_feedback.se2_trajectory_feedback.status ==
+                     (response.feedback.mobility_feedback.se2_trajectory_feedback.status ==
                     basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_NEAR_GOAL):
                     self._spot_wrapper._at_goal = True
                     # Clear the command once at the goal
